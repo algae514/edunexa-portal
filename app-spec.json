@@ -6,7 +6,7 @@
       "name": "api",
       "source_dir": "backend",
       "github": {
-        "repo": "your-username/edunexa-portal",
+        "repo": "algae514/edunexa-portal",
         "branch": "main",
         "deploy_on_push": true
       },
@@ -64,7 +64,7 @@
       "name": "frontend",
       "source_dir": "/",
       "github": {
-        "repo": "your-username/edunexa-portal",
+        "repo": "algae514/edunexa-portal",
         "branch": "main",
         "deploy_on_push": true
       },
