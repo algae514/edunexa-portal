@@ -1,0 +1,120 @@
+{
+  "name": "edunexa-portal",
+  "region": "blr1",
+  "services": [
+    {
+      "name": "api",
+      "source_dir": "backend",
+      "github": {
+        "repo": "your-username/edunexa-portal",
+        "branch": "main",
+        "deploy_on_push": true
+      },
+      "run_command": "npm start",
+      "environment_slug": "node-js",
+      "instance_count": 1,
+      "instance_size_slug": "basic-xxs",
+      "http_port": 5000,
+      "health_check": {
+        "http_path": "/health"
+      },
+      "envs": [
+        {
+          "key": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "key": "PORT",
+          "value": "5000"
+        },
+        {
+          "key": "SENDGRID_API_KEY",
+          "value": "${SENDGRID_API_KEY}",
+          "type": "SECRET"
+        },
+        {
+          "key": "FROM_EMAIL",
+          "value": "noreply@futureos.live"
+        },
+        {
+          "key": "TO_EMAIL",
+          "value": "support@futureos.live"
+        },
+        {
+          "key": "FRONTEND_URL",
+          "value": "https://futureos.live"
+        },
+        {
+          "key": "RATE_LIMIT_WINDOW_MS",
+          "value": "900000"
+        },
+        {
+          "key": "RATE_LIMIT_MAX_REQUESTS",
+          "value": "100"
+        },
+        {
+          "key": "LOG_LEVEL",
+          "value": "info"
+        }
+      ]
+    }
+  ],
+  "static_sites": [
+    {
+      "name": "frontend",
+      "source_dir": "/",
+      "github": {
+        "repo": "your-username/edunexa-portal",
+        "branch": "main",
+        "deploy_on_push": true
+      },
+      "build_command": "npm run build",
+      "output_dir": "dist",
+      "environment_slug": "node-js",
+      "envs": [
+        {
+          "key": "VITE_API_URL",
+          "value": "https://api.futureos.live"
+        }
+      ]
+    }
+  ],
+  "domains": [
+    {
+      "domain": "futureos.live",
+      "type": "PRIMARY"
+    },
+    {
+      "domain": "www.futureos.live",
+      "type": "ALIAS"
+    },
+    {
+      "domain": "api.futureos.live",
+      "type": "PRIMARY"
+    }
+  ],
+  "ingress": {
+    "rules": [
+      {
+        "match": {
+          "path": {
+            "prefix": "/api"
+          }
+        },
+        "component": {
+          "name": "api"
+        }
+      },
+      {
+        "match": {
+          "path": {
+            "prefix": "/"
+          }
+        },
+        "component": {
+          "name": "frontend"
+        }
+      }
+    ]
+  }
+}
