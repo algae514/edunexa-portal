@@ -21,13 +21,8 @@ class EmailService {
   }
 
   initializeServices() {
-    // Initialize SendGrid
-    if (process.env.SENDGRID_API_KEY) {
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-      this.useSendGrid = true;
-      logger.info('SendGrid initialized successfully');
-    } else {
-      // Fallback to SMTP with Nodemailer
+    // Prioritize SMTP over SendGrid for simplicity
+    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
       this.transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -36,7 +31,13 @@ class EmailService {
         }
       });
       this.useSendGrid = false;
-      logger.info('SMTP transporter initialized as fallback');
+      logger.info('Gmail SMTP initialized successfully');
+    } else if (process.env.SENDGRID_API_KEY) {
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      this.useSendGrid = true;
+      logger.info('SendGrid initialized as fallback');
+    } else {
+      logger.warn('No email service configured. Add SMTP_USER/SMTP_PASS or SENDGRID_API_KEY');
     }
   }
 
